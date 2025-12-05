@@ -9,7 +9,9 @@
         },
         "./design/new-record.sh": true,
         "design/new-record.sh": true,
-        "bash design/new-record.sh": true
+        "bash design/new-record.sh": true,
+        "uv run pyright": true,
+        "uv run pytest": true
     },
     "markdown.validate.enabled": true
 }

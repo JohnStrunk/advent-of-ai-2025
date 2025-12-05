@@ -69,3 +69,13 @@ def divide_numbers(a: float, b: float) -> float:
   readability.
 - Perform coverage analysis using `pytest-cov` to ensure that all new code is
   adequately tested.
+
+## Critical reminders
+
+AFTER MAKING CHANGES TO ANY PYTHON FILE or PROJECT CONFIGURATION:
+
+- Run the tests: `uv run pytest`
+- Run the type checker: `uv run pyright`
+- Run the linter: `.github/lint-all.sh`
+
+Fix any issues before declaring the changes complete.
