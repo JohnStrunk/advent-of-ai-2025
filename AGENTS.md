@@ -88,3 +88,8 @@ following command to ensure code quality and consistency:
 If the linting process identifies any issues, you **MUST** address them before
 proceeding with the commit. Only after successfully passing all linting checks
 should you commit your changes to the repository.
+
+- Always re-stage files after pre-commit hooks make changes.
+- Retry the commit until it exits successfully and all hooks pass. You MUST
+  CHECK THE RETURN STATUS of the git commit command. If it fails, you MUST fix
+  the issues and reattempt the commit.
