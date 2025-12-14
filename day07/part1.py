@@ -1,11 +1,13 @@
 """Day 7 Part 1: Count the number of beam splits in the tachyon manifold grid."""
 
 
-def count_splits(grid):
+def count_splits(grid: list[str]) -> int:
     """Count the number of splits as the beam traverses the grid."""
-    height = len(grid)
-    width = len(grid[0])
+    height: int = len(grid)
+    width: int = len(grid[0])
     # Find the S position
+    sx: int
+    sy: int
     for y, row in enumerate(grid):
         if "S" in row:
             sx = row.index("S")
@@ -16,9 +18,9 @@ def count_splits(grid):
 
     # Each beam is (x, y, direction)
     # For part 1, all beams move downward (direction = 'down')
-    beams = [(sx, sy + 1)]  # Start just below S
-    split_count = 0
-    visited = set()
+    beams: list[tuple[int, int]] = [(sx, sy + 1)]  # Start just below S
+    split_count: int = 0
+    visited: set[tuple[int, int]] = set()
 
     while beams:
         x, y = beams.pop()
@@ -27,7 +29,7 @@ def count_splits(grid):
         visited.add((x, y))
         if y >= height:
             continue
-        cell = grid[y][x]
+        cell: str = grid[y][x]
         if cell == ".":
             beams.append((x, y + 1))
         elif cell == "^":

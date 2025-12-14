@@ -2,45 +2,46 @@
 
 import sys
 
-ADJACENT_THRESHOLD = 4  # Rolls with fewer than this many adjacent are accessible
-EXPECTED_ARG_COUNT = 2  # Script name + input file
+ADJACENT_THRESHOLD: int = 4  # Rolls with fewer than this many adjacent are accessible
+EXPECTED_ARG_COUNT: int = 2  # Script name + input file
 
 
-def main(filename):
+def main(filename: str) -> None:
     """Remove accessible rolls in rounds and print the total removed."""
     with open(filename) as f:
-        grid = parse_grid(f.readlines())
-    total_removed = 0
+        grid: list[list[str]] = parse_grid(f.readlines())
+    total_removed: int = 0
     while True:
-        removed = remove_accessible(grid)
+        removed: int = remove_accessible(grid)
         if removed == 0:
             break
         total_removed += removed
     print(total_removed)
 
 
-def parse_grid(lines):
+def parse_grid(lines: list[str]) -> list[list[str]]:
     """Parse the input lines into a grid of characters."""
     return [list(line.strip()) for line in lines if line.strip()]
 
 
-def count_adjacent(grid, r, c):
+def count_adjacent(grid: list[list[str]], r: int, c: int) -> int:
     """Count the number of adjacent '@' rolls around position (r, c)."""
-    count = 0
+    count: int = 0
     for dr in [-1, 0, 1]:
         for dc in [-1, 0, 1]:
             if dr == 0 and dc == 0:
                 continue
-            nr, nc = r + dr, c + dc
+            nr: int = r + dr
+            nc: int = c + dc
             if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]):
                 if grid[nr][nc] == "@":
                     count += 1
     return count
 
 
-def remove_accessible(grid):
+def remove_accessible(grid: list[list[str]]) -> int:
     """Remove all accessible '@' rolls from the grid in one round. Return the count removed."""
-    to_remove = []
+    to_remove: list[tuple[int, int]] = []
     for r in range(len(grid)):
         for c in range(len(grid[0])):
             if grid[r][c] == "@" and count_adjacent(grid, r, c) < ADJACENT_THRESHOLD:

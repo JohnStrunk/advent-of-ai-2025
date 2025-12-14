@@ -3,7 +3,7 @@
 from day03.part2 import largest_12_digit_number
 
 
-def test_largest_12_digit_number_examples():
+def test_largest_12_digit_number_examples() -> None:
     """Test largest_12_digit_number with puzzle description examples."""
     assert largest_12_digit_number("987654321111111") == 987654321111
     assert largest_12_digit_number("811111111111119") == 811111111119
@@ -11,7 +11,7 @@ def test_largest_12_digit_number_examples():
     assert largest_12_digit_number("818181911112111") == 888911112111
 
 
-def test_largest_12_digit_number_edge_cases():
+def test_largest_12_digit_number_edge_cases() -> None:
     """Test largest_12_digit_number with edge case inputs."""
     # All digits the same
     assert largest_12_digit_number("111111111111111") == 111111111111

@@ -13,7 +13,7 @@ def test_example():
 12-18
 """
     f = io.StringIO(data)
-    ranges = []
+    ranges: list[tuple[int, int]] = []
     for file_line in f:
         line = file_line.strip()
         if not line:
@@ -26,7 +26,7 @@ def test_example():
 
 def test_merge_overlap():
     """Test merging of overlapping ranges."""
-    ranges = [(1, 3), (2, 5), (10, 12)]
-    merged = merge_ranges(ranges)
-    assert merged == [[1, 5], [10, 12]]
+    ranges: list[tuple[int, int]] = [(1, 3), (2, 5), (10, 12)]
+    merged: list[tuple[int, int]] = merge_ranges(ranges)
+    assert merged == [(1, 5), (10, 12)]  # Corrected to tuple format
     assert count_fresh_ids(ranges) == 8

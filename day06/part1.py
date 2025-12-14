@@ -1,42 +1,42 @@
 """Day 6 - Part 1 Solution: Solve worksheet by reading numbers vertically in each problem group."""
 
 
-def solve(input_lines):
+def solve(input_lines: list[str]) -> int:
     """Solve the worksheet for part 1 rules."""
-    rows = [line.rstrip("\n") for line in input_lines]
+    rows: list[str] = [line.rstrip("\n") for line in input_lines]
     if not rows:
         return 0
-    n_rows = len(rows)
-    n_cols = max(len(row) for row in rows)
+    n_rows: int = len(rows)
+    n_cols: int = max(len(row) for row in rows)
     # Pad all rows to the same length
     rows = [row.ljust(n_cols) for row in rows]
-    problems = []
-    col = 0
+    problems: list[tuple[list[int], str]] = []
+    col: int = 0
     while col < n_cols:
         # Find the start of a problem (not all spaces in the number rows)
         if all(rows[r][col] == " " for r in range(n_rows - 1)):
             col += 1
             continue
         # Collect columns for this problem until we hit a full space column
-        problem_cols = []
+        problem_cols: list[int] = []
         while col < n_cols and not all(rows[r][col] == " " for r in range(n_rows - 1)):
             problem_cols.append(col)
             col += 1
         # Extract numbers and operator
-        numbers = []
+        numbers: list[int] = []
         for r in range(n_rows - 1):
-            num_str = "".join(rows[r][c] for c in problem_cols).strip()
+            num_str: str = "".join(rows[r][c] for c in problem_cols).strip()
             if num_str:
                 numbers.append(int(num_str))
-        op = "".join(rows[n_rows - 1][c] for c in problem_cols).strip()
+        op: str = "".join(rows[n_rows - 1][c] for c in problem_cols).strip()
         problems.append((numbers, op))
     # Now solve each problem
-    total = 0
+    total: int = 0
     for numbers, op in problems:
         if op == "+":
             total += sum(numbers)
         elif op == "*":
-            prod = 1
+            prod: int = 1
             for n in numbers:
                 prod *= n
             total += prod

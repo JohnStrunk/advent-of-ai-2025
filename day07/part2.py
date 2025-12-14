@@ -1,16 +1,18 @@
 """Day 7 Part 2: Count the number of timelines in a quantum tachyon manifold."""
 
 
-def count_timelines(grid):
+def count_timelines(grid: list[str]) -> int:
     """Count the number of unique timelines after quantum particle traversal.
 
     In a quantum manifold, the particle takes both left and right paths at
     each splitter. We use memoization to efficiently count all unique paths.
     """
-    height = len(grid)
-    width = len(grid[0])
+    height: int = len(grid)
+    width: int = len(grid[0])
 
     # Find the S position
+    sx: int
+    sy: int
     for y, row in enumerate(grid):
         if "S" in row:
             sx = row.index("S")
@@ -20,9 +22,9 @@ def count_timelines(grid):
         raise ValueError("No S found in grid")
 
     # Memoization cache: (x, y) -> number of timelines from this position
-    memo = {}
+    memo: dict[tuple[int, int], int] = {}
 
-    def count_from(x, y):
+    def count_from(x: int, y: int) -> int:
         """Recursively count timelines from position (x, y) moving downward."""
         # Check bounds - if we exit, this is 1 complete timeline
         if y >= height or x < 0 or x >= width:
@@ -32,8 +34,8 @@ def count_timelines(grid):
         if (x, y) in memo:
             return memo[(x, y)]
 
-        cell = grid[y][x]
-        result = 0
+        cell: str = grid[y][x]
+        result: int = 0
 
         if cell == ".":
             # Continue downward

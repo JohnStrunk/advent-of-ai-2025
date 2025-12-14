@@ -5,12 +5,12 @@ Counts the number of unique ingredient IDs considered fresh by any of the given 
 """
 
 
-def parse_ranges(filename):
+def parse_ranges(filename: str) -> list[tuple[int, int]]:
     """Parse ranges from the input file."""
-    ranges = []
+    ranges: list[tuple[int, int]] = []
     with open(filename) as f:
         for file_line in f:
-            line = file_line.strip()
+            line: str = file_line.strip()
             if not line:
                 continue
             if "-" in line:
@@ -19,22 +19,23 @@ def parse_ranges(filename):
     return ranges
 
 
-def merge_ranges(ranges):
+def merge_ranges(ranges: list[tuple[int, int]]) -> list[tuple[int, int]]:
     """Merge overlapping or adjacent ranges."""
     # Sort ranges by start
     ranges.sort()
-    merged = []
+    merged: list[tuple[int, int]] = []
     for start, end in ranges:
         if not merged or start > merged[-1][1] + 1:
-            merged.append([start, end])
+            merged.append((start, end))
         else:
-            merged[-1][1] = max(merged[-1][1], end)
+            # Create a new tuple instead of modifying an existing one
+            merged[-1] = (merged[-1][0], max(merged[-1][1], end))
     return merged
 
 
-def count_fresh_ids(ranges):
+def count_fresh_ids(ranges: list[tuple[int, int]]) -> int:
     """Count the total number of unique fresh ingredient IDs."""
-    merged = merge_ranges(ranges)
+    merged: list[tuple[int, int]] = merge_ranges(ranges)
     return sum(end - start + 1 for start, end in merged)
 
 

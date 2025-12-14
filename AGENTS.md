@@ -89,15 +89,18 @@ like formatters, linters, and test runners.
 ## Committing changes
 
 Before committing any changes to the repository, you **MUST** run the
-following command to ensure code quality and consistency:
+following commands to ensure code quality and consistency:
 
 ```bash
 .github/lint-all.sh
+uv run pytest
+uv run pyright
 ```
 
-If the linting process identifies any issues, you **MUST** address them before
-proceeding with the commit. Only after successfully passing all linting checks
-should you commit your changes to the repository.
+If the linting and testing process identifies any issues, you **MUST** address
+them before proceeding with the commit. Only after successfully passing all
+checks should you commit your changes to the repository. You **MUST** use the
+exit code of each command to determine success or failure.
 
 - Always re-stage files after pre-commit hooks make changes.
 - Retry the commit until it exits successfully and all hooks pass. You MUST

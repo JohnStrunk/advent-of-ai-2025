@@ -3,18 +3,18 @@
 from day04.part1 import count_accessible_rolls
 
 
-def test_accessible_rolls_sample():
+def test_accessible_rolls_sample() -> None:
     """Test the sample grid from the puzzle description."""
-    sample = [
-        "..@@.@@@@.",
-        "@@@.@.@.@@",
-        "@@@@@.@.@@",
-        "@.@@@@..@.",
-        "@@.@@@@.@@",
-        ".@@@@@@@.@",
-        ".@.@.@.@@@",
-        "@.@@@.@@@@",
-        ".@@@@@@@@.",
-        "@.@.@@@.@.",
+    sample: list[list[str]] = [
+        list("..@@.@@@@."),
+        list("@@@.@.@.@@"),
+        list("@@@@@.@.@@"),
+        list("@.@@@@..@."),
+        list("@@.@@@@.@@"),
+        list(".@@@@@@@.@"),
+        list(".@.@.@.@@@"),
+        list("@.@@@.@@@@"),
+        list(".@@@@@@@@."),
+        list("@.@.@@@.@."),
     ]
     assert count_accessible_rolls(sample) == 13
