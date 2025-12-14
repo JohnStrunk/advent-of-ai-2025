@@ -72,3 +72,19 @@ use the following command:
 ```bash
 uv run path/to/file.py
 ```
+
+ALL python code MUST be run using uv: `uv run ...`. This includes utilities
+like formatters, linters, and test runners.
+
+## Committing changes
+
+Before committing any changes to the repository, you **MUST** run the
+following command to ensure code quality and consistency:
+
+```bash
+.github/lint-all.sh
+```
+
+If the linting process identifies any issues, you **MUST** address them before
+proceeding with the commit. Only after successfully passing all linting checks
+should you commit your changes to the repository.

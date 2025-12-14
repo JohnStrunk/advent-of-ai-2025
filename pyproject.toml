@@ -83,5 +83,10 @@ select = [
 ]
 pydocstyle.convention = "pep257"
 
+[tool.ruff.lint.per-file-ignores]
+# Ignore magic value (PLR2004) in test files
+"*_test.py" = ["PLR2004"]
+"test_*.py" = ["PLR2004"]
+
 [tool.uv.pip]
 universal = true
