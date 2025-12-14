@@ -25,6 +25,12 @@ standards.
 - When executing Python scripts or modules, always use `uv run <command>` to
   ensure the correct environment is used.
 
+## Installing tools
+
+- Development tools such as linters, formatters, and testing frameworks must
+  be installed using uv. For example, to install `ruff`, run: `uv tool install
+  ruff`
+
 ## Configuration files
 
 - The `pyproject.toml` file defines the project's dependencies and settings.
@@ -69,6 +75,11 @@ def divide_numbers(a: float, b: float) -> float:
   readability.
 - Perform coverage analysis using `pytest-cov` to ensure that all new code is
   adequately tested.
+- Where possible:
+  - Use property-based testing with `hypothesis` to validate code behavior
+    across a wide range of inputs.
+  - Include `doctest` examples in docstrings to provide usage examples and
+    ensure correctness.
 
 ## Critical reminders
 
