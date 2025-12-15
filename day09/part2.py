@@ -164,7 +164,7 @@ def find_largest_valid_rectangle(red_tiles: list[tuple[int, int]]) -> int:
     max_possible_area = (max_x - min_x + 1) * (max_y - min_y + 1)
 
     # Limit rectangle size to avoid checking millions of tiles
-    max_reasonable_area = 50000
+    max_reasonable_area = 500000  # Increased to find larger rectangles
 
     for i in range(n):
         for j in range(i + 1, n):
