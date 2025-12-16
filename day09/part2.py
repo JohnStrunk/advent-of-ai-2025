@@ -62,10 +62,21 @@ def is_tile_valid(
     red_tiles_set: set[tuple[int, int]],
     green_edges: set[tuple[int, int]],
     polygon: list[tuple[int, int]],
+    bbox: tuple[int, int, int, int] | None = None,
 ) -> bool:
     """Check if a tile is red or green (edge or interior)."""
+    # O(1) checks first
     if point in red_tiles_set or point in green_edges:
         return True
+
+    # Quick bounding box check before expensive ray-casting
+    if bbox is not None:
+        min_x, max_x, min_y, max_y = bbox
+        x, y = point
+        if x < min_x or x > max_x or y < min_y or y > max_y:
+            return False
+
+    # O(n) ray-casting only when necessary
     return is_point_inside_polygon(point, polygon)
 
 
@@ -110,33 +121,17 @@ def is_rectangle_valid(
     green_edges: set[tuple[int, int]],
     polygon: list[tuple[int, int]],
 ) -> bool:
-    """Check if rectangle contains only red or green tiles."""
+    """Check if rectangle contains only red or green tiles.
+
+    NOTE: This function checks all tiles in the rectangle. It's kept for
+    backward compatibility with existing tests. For production use,
+    prefer is_rectangle_valid_boundary_only() which is much faster.
+    """
     x1, y1 = p1
     x2, y2 = p2
 
     min_x, max_x = min(x1, x2), max(x1, x2)
     min_y, max_y = min(y1, y2), max(y1, y2)
-
-    width = max_x - min_x + 1
-    height = max_y - min_y + 1
-
-    # For large rectangles, check sample points first as a quick filter
-    if width * height > 100:  # noqa: PLR2004
-        # Check corners and midpoints first
-        sample_points = [
-            (min_x, min_y),
-            (max_x, max_y),
-            (min_x, max_y),
-            (max_x, min_y),
-            ((min_x + max_x) // 2, (min_y + max_y) // 2),
-            ((min_x + max_x) // 2, min_y),
-            ((min_x + max_x) // 2, max_y),
-            (min_x, (min_y + max_y) // 2),
-            (max_x, (min_y + max_y) // 2),
-        ]
-        for point in sample_points:
-            if not is_tile_valid(point, red_tiles_set, green_edges, polygon):
-                return False
 
     # Check all tiles
     for x in range(min_x, max_x + 1):
@@ -148,23 +143,82 @@ def is_rectangle_valid(
     return True
 
 
+def is_rectangle_valid_boundary_only(  # noqa: PLR0913
+    p1: tuple[int, int],
+    p2: tuple[int, int],
+    red_tiles_set: set[tuple[int, int]],
+    green_edges: set[tuple[int, int]],
+    polygon: list[tuple[int, int]],
+    bbox: tuple[int, int, int, int] | None = None,
+) -> bool:
+    """Check if rectangle perimeter contains only red or green tiles.
+
+    For simply-connected regions (no holes), if the perimeter is valid,
+    the interior must also be valid. This is much faster than checking
+    all tiles: O(perimeter) vs O(area).
+    """
+    x1, y1 = p1
+    x2, y2 = p2
+
+    min_x, max_x = min(x1, x2), max(x1, x2)
+    min_y, max_y = min(y1, y2), max(y1, y2)
+
+    # Check top edge: y=min_y, x from min_x to max_x
+    for x in range(min_x, max_x + 1):
+        if not is_tile_valid((x, min_y), red_tiles_set, green_edges, polygon, bbox):
+            return False
+
+    # Check bottom edge: y=max_y, x from min_x to max_x
+    for x in range(min_x, max_x + 1):
+        if not is_tile_valid((x, max_y), red_tiles_set, green_edges, polygon, bbox):
+            return False
+
+    # Check left edge: x=min_x, y from min_y+1 to max_y-1 (skip corners)
+    for y in range(min_y + 1, max_y):
+        if not is_tile_valid((min_x, y), red_tiles_set, green_edges, polygon, bbox):
+            return False
+
+    # Check right edge: x=max_x, y from min_y+1 to max_y-1 (skip corners)
+    for y in range(min_y + 1, max_y):
+        if not is_tile_valid((max_x, y), red_tiles_set, green_edges, polygon, bbox):
+            return False
+
+    return True
+
+
+def is_point_in_rectangle(
+    point: tuple[int, int], corner1: tuple[int, int], corner2: tuple[int, int]
+) -> bool:
+    """Check if point is strictly inside rectangle (not on boundary)."""
+    x, y = point
+    x1, y1 = corner1
+    x2, y2 = corner2
+
+    min_x, max_x = min(x1, x2), max(x1, x2)
+    min_y, max_y = min(y1, y2), max(y1, y2)
+
+    # Strictly inside means not touching the boundary
+    return min_x < x < max_x and min_y < y < max_y
+
+
 def find_largest_valid_rectangle(red_tiles: list[tuple[int, int]]) -> int:
-    """Find largest rectangle with red corners containing only red/green tiles."""
+    """Find largest rectangle with red corners containing only red/green tiles.
+
+    Uses two-phase validation: fast rejection for red tiles inside,
+    then boundary checking for perimeter tiles.
+    """
     green_edges = build_edge_tiles(red_tiles)
     red_set = set(red_tiles)
 
-    max_area = 0
-    n = len(red_tiles)
-
-    # Pre-compute bounding box to skip obviously invalid rectangles
+    # Pre-compute bounding box for polygon
     min_x = min(x for x, _ in red_tiles)
     max_x = max(x for x, _ in red_tiles)
     min_y = min(y for _, y in red_tiles)
     max_y = max(y for _, y in red_tiles)
-    max_possible_area = (max_x - min_x + 1) * (max_y - min_y + 1)
+    bbox = (min_x, max_x, min_y, max_y)
 
-    # Limit rectangle size to avoid checking millions of tiles
-    max_reasonable_area = 500000  # Increased to find larger rectangles
+    max_area = 0
+    n = len(red_tiles)
 
     for i in range(n):
         for j in range(i + 1, n):
@@ -174,16 +228,20 @@ def find_largest_valid_rectangle(red_tiles: list[tuple[int, int]]) -> int:
             if area <= max_area:
                 continue
 
-            # Skip if area is impossibly large
-            if area > max_possible_area:
+            # Phase 1: Fast rejection - check if any red tile is inside
+            has_red_inside = False
+            for k in range(n):
+                if k not in (i, j):
+                    if is_point_in_rectangle(red_tiles[k], red_tiles[i], red_tiles[j]):
+                        has_red_inside = True
+                        break
+
+            if has_red_inside:
                 continue
 
-            # Skip very large rectangles to avoid timeout
-            if area > max_reasonable_area:
-                continue
-
-            if is_rectangle_valid(
-                red_tiles[i], red_tiles[j], red_set, green_edges, red_tiles
+            # Phase 2: Check perimeter (with early termination)
+            if is_rectangle_valid_boundary_only(
+                red_tiles[i], red_tiles[j], red_set, green_edges, red_tiles, bbox
             ):
                 max_area = area
 
