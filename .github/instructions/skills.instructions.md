@@ -26,7 +26,6 @@ skill, and a link to the full instructions for that skill:
 | **name** | **description** | **Instructions link** |
 | ------ | ----- | ----- |
 | dad-joke | How to tell a dad joke. Use this skill to respond with a dad joke when prompted. | [../skills/dad-joke/SKILL.md](../skills/dad-joke/SKILL.md) |
-| solve-puzzle | Use this to solve the Advent of Code daily puzzles. | [../skills/solve-puzzle/SKILL.md](../skills/solve-puzzle/SKILL.md) |
 | superpowers:brainstorming | Use when creating or developing, before writing code or implementation plans - refines rough ideas into fully-formed designs through collaborative questioning, alternative exploration, and incremental validation. Don't use during clear 'mechanical' processes | [../skills/superpowers/brainstorming/SKILL.md](../skills/superpowers/brainstorming/SKILL.md) |
 | superpowers:executing-plans | Use when partner provides a complete implementation plan to execute in controlled batches with review checkpoints - loads plan, reviews critically, executes tasks in batches, reports for review between batches | [../skills/superpowers/executing-plans/SKILL.md](../skills/superpowers/executing-plans/SKILL.md) |
 | superpowers:finishing-a-development-branch | Use when implementation is complete, all tests pass, and you need to decide how to integrate the work - guides completion of development work by presenting structured options for merge, PR, or cleanup | [../skills/superpowers/finishing-a-development-branch/SKILL.md](../skills/superpowers/finishing-a-development-branch/SKILL.md) |
