@@ -12,7 +12,8 @@
         "bash design/new-record.sh": true,
         "uv run pyright": true,
         "uv run pytest": true,
-        "git add": true
+        "git add": true,
+        "git branch": true
     },
     "markdown.validate.enabled": true
 }

@@ -121,3 +121,17 @@ repos:
     hooks:
       # Check that JSON files are valid JSON5
       - id: check-json5
+
+  - repo: local
+    hooks:
+      - id: pyright
+        name: Type check Python code with Pyright
+        entry: uv run pyright
+        language: system
+        types: [python]
+      - id: pytest
+        name: Run Python unit tests with pytest
+        entry: uv run pytest
+        language: system
+        pass_filenames: false
+        types: [python]
