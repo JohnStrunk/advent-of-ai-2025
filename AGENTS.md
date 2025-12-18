@@ -86,37 +86,6 @@ uv run path/to/file.py
 ALL python code MUST be run using uv: `uv run ...`. This includes utilities
 like formatters, linters, and test runners.
 
-## Committing changes
-
-Before committing any changes to the repository, you **MUST** run the
-following commands to ensure code quality and consistency:
-
-```bash
-.github/lint-all.sh
-uv run pytest
-uv run pyright
-```
-
-If the linting and testing process identifies any issues, you **MUST** address
-them before proceeding with the commit. Only after successfully passing all
-checks should you commit your changes to the repository. You **MUST** use the
-exit code of each command to determine success or failure.
-
-This repository uses the `pre-commit` tool to enforce linting and other checks
-with each commit. When generating git commits, it is essential to verify the
-return code from the `git commit` command. If ANY pre-commit checks fail, that
-means the commit has failed. The issues must be fixed and the commit re-tried.
-
-When generating commits:
-
-- Always re-stage files after pre-commit hooks make changes.
-- Retry the commit until it exits successfully and all hooks pass. You MUST
-  CHECK THE RETURN STATUS of the git commit command. If it fails, you MUST fix
-  the issues and reattempt the commit.
-- Repeat this entire procedure until the commit is successful. NOTE: Since
-  your commit has failed, you do not have a previous commit to "fix" (so don't
-  use "--amend" or "--no-edit").
-
 ## Additional Requirements for Day Directories
 
 To ensure consistent behavior and avoid import issues, each day's directory
