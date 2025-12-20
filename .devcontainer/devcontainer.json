@@ -7,6 +7,7 @@
     "image": "mcr.microsoft.com/devcontainers/base:debian@sha256:30b0a0c004ca94d36c323ee993361a7e0ae25ea255ea125201e8a9587501c324",
     // Available features: https://containers.dev/features
     "features": {
+        "ghcr.io/devcontainers/features/copilot-cli:1.0.0": {},
         "ghcr.io/devcontainers/features/github-cli:1.0.15": {},
         "ghcr.io/devcontainers/features/node:1.6.3": {
             "version": "lts",
